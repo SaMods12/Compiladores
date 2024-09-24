@@ -1,0 +1,155 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #2e2e2e; /* Color de fondo oscuro */
+    color: #e0e0e0; /* Color de texto claro */
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+}
+
+/* Asegúrate de que el contenedor esté centrado en la página */
+.contenedor {
+    width: 80%; /* Ajusta el ancho según sea necesario */
+    margin: 0 auto; /* Centra el contenedor horizontalmente */
+}
+
+/* Contenedor principal */
+.contenedor {
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 800px;
+    background-color: #3b3b3b; /* Fondo del contenedor */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Contenedor para el formulario */
+form {
+    margin-bottom: 20px;
+}
+
+/* Contenedor para los botones */
+.botonera {
+    display: flex;
+    gap: 10px; /* Espacio entre los botones */
+}
+
+/* Estilo para los botones */
+.botonera input[type="submit"],
+.botonera button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* Área de texto */
+textarea {
+    width: 100%;
+    height: 150px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #555; /* Borde más oscuro */
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #4d4d4d; /* Fondo del textarea */
+    color: #e0e0e0; /* Color del texto */
+}
+
+/* Botón analizar */
+input[type="submit"].analizar {
+    width: 100%;
+    background-color: #6A3B9A; /* Color del fondo del botón */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type="submit"].analizar:hover {
+    background-color: #704799; /* Color del fondo del botón al pasar el cursor */
+}
+
+/* Botón limpiar */
+button.limpiar {
+    width: 100%;
+    background-color: #d9534f; /* Color del fondo del botón de limpiar */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button.limpiar:hover {
+    background-color: #c9302c; /* Color del fondo del botón al pasar el cursor */
+}
+
+/* Estilos para los tokens */
+.contenedor_2 p {
+    background-color: #4d4d4d; /* Fondo de los tokens */
+    padding: 10px;
+    border: 1px solid #555; /* Borde de los tokens */
+    border-radius: 4px;
+    margin: 0 0 10px 0;
+}
+
+/* Estilos para la tabla */
+.contenedor_tabla {
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #555; /* Borde de la tabla */
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #3b3b3b; /* Fondo del encabezado de la tabla */
+    color: #e0e0e0; /* Color del texto del encabezado */
+}
+
+tr:nth-child(even) {
+    background-color: #4d4d4d; /* Fondo de las filas pares */
+}
+
+tr:nth-child(odd) {
+    background-color: #3b3b3b; /* Fondo de las filas impares */
+}
+
+/* Estilos para el contador de tokens */
+.contenedor_2 p {
+    background-color: #4d4d4d; /* Fondo de los tokens, igual que el textarea */
+    padding: 10px;
+    border: 1px solid #555; /* Borde oscuro como el resto */
+    border-radius: 4px; /* Borde redondeado similar a botones y tabla */
+    margin: 0 0 10px 0;
+    color: #e0e0e0; /* Color de texto claro */
+    font-size: 16px; /* Tamaño de fuente consistente */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Sombra ligera para dar profundidad */
+}
+
+/* Estilo del contenedor de los tokens */
+.contenedor_2 {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #3b3b3b; /* Fondo del contenedor de tokens */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Sombra similar a la del contenedor principal */
+}
+
+
