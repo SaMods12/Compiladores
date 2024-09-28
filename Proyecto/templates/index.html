@@ -9,6 +9,7 @@
 <body>
     <div class="contenedor">
         <h1>Analizador Sintáctico</h1>
+        
         <!-- Formulario para analizar -->
         <form action="/" method="post">
             <textarea name="texto" rows="10" cols="50" placeholder="Ingresa tu código aquí...">{{ texto }}</textarea><br>
@@ -16,6 +17,7 @@
                 <input type="submit" class="analizar" value="Analizar">
             </div>
         </form>
+
         <!-- Formulario separado para limpiar -->
         <form id="clearForm" action="/clear" method="post">
             <div class="botonera">
@@ -23,17 +25,7 @@
             </div>
         </form>
 
-        <h2>Resultado Léxico</h2>
-        <ul>
-            {% if resultado_lexema %}
-                {% for lexema in resultado_lexema %}
-                    <li>{{ lexema }}</li>
-                {% endfor %}
-            {% else %}
-                <li>No hay resultados</li>
-            {% endif %}
-        </ul>
-
+<!-- Resultado Sintáctico -->
         <h2>Resultado Sintáctico</h2>
         <ul>
             {% if resultado_sintactico %}
@@ -44,6 +36,46 @@
                 <li>No hay resultados</li>
             {% endif %}
         </ul>
+
+        
+
+        <!-- Resultado Léxico en formato de tabla -->
+        <h2>Resultado Léxico</h2>
+        {% if resultado_lexema %}
+        <div class="contenedor_tabla">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Token</th>
+                        <th>Lexema</th>
+                        <th>Línea</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lexema in resultado_lexema %}
+                    <tr>
+                        <td>{{ lexema.token }}</td>
+                        <td>{{ lexema.lexema }}</td>
+                        <td>{{ lexema.linea }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Conteo de Tokens -->
+        <div class="contenedor_contadores">
+            <h2>Conteo de Tokens</h2>
+            <ul>
+                {% for tipo, count in token_count.items() %}
+                <li>{{ tipo }}: {{ count }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% else %}
+            <p>No hay resultados léxicos disponibles</p>
+        {% endif %}
+
     </div>
 </body>
 </html>

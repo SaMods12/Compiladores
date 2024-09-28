@@ -90,3 +90,65 @@ ul li {
     margin: 5px 0;
     border-radius: 4px;
 }
+
+/* Estilos para los tokens */
+.contenedor_2 p {
+    background-color: #4d4d4d; /* Fondo de los tokens */
+    padding: 10px;
+    border: 1px solid #555; /* Borde de los tokens */
+    border-radius: 4px;
+    margin: 0 0 10px 0;
+}
+
+/* Estilos para la tabla */
+.contenedor_tabla {
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #555; /* Borde de la tabla */
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #3b3b3b; /* Fondo del encabezado de la tabla */
+    color: #e0e0e0; /* Color del texto del encabezado */
+}
+
+tr:nth-child(even) {
+    background-color: #4d4d4d; /* Fondo de las filas pares */
+}
+
+tr:nth-child(odd) {
+    background-color: #3b3b3b; /* Fondo de las filas impares */
+}
+
+/* Estilos para el contador de tokens */
+.contenedor_2 p {
+    background-color: #4d4d4d; /* Fondo de los tokens, igual que el textarea */
+    padding: 10px;
+    border: 1px solid #555; /* Borde oscuro como el resto */
+    border-radius: 4px; /* Borde redondeado similar a botones y tabla */
+    margin: 0 0 10px 0;
+    color: #e0e0e0; /* Color de texto claro */
+    font-size: 16px; /* Tamaño de fuente consistente */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Sombra ligera para dar profundidad */
+}
+
+/* Estilo del contenedor de los tokens */
+.contenedor_2 {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #3b3b3b; /* Fondo del contenedor de tokens */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Sombra similar a la del contenedor principal */
+}

@@ -5,15 +5,22 @@ import ply.yacc as yacc
 # Configuración de la aplicación Flask
 app = Flask(__name__)
 
-# Resultado del análisis de lexemas y del análisis sintáctico
+# Variables globales para almacenar resultados
 resultado_lexema = []
 resultado_sintactico = []
 errores = []
+token_count = {}
 
 # Palabras reservadas
 reservada = {
-    'if': 'IF', 'else': 'ELSE', 'while': 'WHILE', 'for': 'FOR', 'int': 'INT', 
-    'System': 'SYSTEM', 'out': 'OUT', 'println': 'PRINTLN'
+    'if': 'IF', 
+    'else': 'ELSE', 
+    'while': 'WHILE', 
+    'for': 'FOR', 
+    'int': 'INT', 
+    'System': 'SYSTEM', 
+    'out': 'OUT', 
+    'println': 'PRINTLN'
 }
 
 tokens = list(reservada.values()) + [
@@ -55,7 +62,7 @@ def t_newline(t):
 # Manejo de errores de tokens no válidos
 def t_error(t):
     global resultado_lexema
-    resultado_lexema.append(f"Token no válido: {t.value} en línea {t.lineno}")
+    resultado_lexema.append({"token": "ERROR", "lexema": t.value, "linea": t.lineno})
     t.lexer.skip(1)
 
 # Ignorar espacios y tabulaciones
@@ -63,17 +70,23 @@ t_ignore = ' \t'
 
 # Función para analizar el texto ingresado (léxico)
 def prueba_lexico(data):
-    global resultado_lexema
+    global resultado_lexema, token_count
     resultado_lexema.clear()  # Limpiar la lista antes de cada prueba
+    token_count.clear()  # Limpiar el contador de tokens
     analizador = lex.lex()
     analizador.input(data)
+
     while True:
         tok = analizador.token()
         if not tok:
             break
-        resultado_lexema.append(f"{tok.type} (línea {tok.lineno})")
-
-# Definición de la gramática libre de contexto para el análisis sintáctico
+        resultado_lexema.append({"token": tok.type, "lexema": tok.value, "linea": tok.lineno})
+        
+        # Contar tokens
+        if tok.type in token_count:
+            token_count[tok.type] += 1
+        else:
+            token_count[tok.type] = 1
 
 # Reglas gramaticales para un bucle for
 def p_instruccion_for(p):
@@ -112,23 +125,26 @@ def prueba_sintactico(data):
 # Ruta principal con el formulario
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    texto = ""
     if request.method == 'POST':
         # Obtener los datos del formulario
         texto = request.form['texto']
         prueba_lexico(texto)  # Ejecutar el análisis léxico
         prueba_sintactico(texto)  # Ejecutar el análisis sintáctico
         return render_template('index.html', resultado_lexema=resultado_lexema, 
-                               resultado_sintactico=resultado_sintactico, texto=texto)
-    return render_template('index.html', resultado_lexema=None, resultado_sintactico=None)
+                               resultado_sintactico=resultado_sintactico, 
+                               token_count=token_count, texto=texto)
+    return render_template('index.html', resultado_lexema=None, resultado_sintactico=None, token_count=None, texto=texto)
 
 # Ruta para limpiar los resultados
 @app.route('/clear', methods=['POST'])
 def clear():
-    global resultado_lexema, resultado_sintactico, errores
+    global resultado_lexema, resultado_sintactico, errores, token_count
     resultado_lexema.clear()  # Limpiar el resultado léxico
     resultado_sintactico.clear()  # Limpiar el resultado sintáctico
     errores.clear()  # Limpiar la lista de errores
-    return render_template('index.html', resultado_lexema=None, resultado_sintactico=None)
+    token_count.clear()  # Limpiar el contador de tokens
+    return render_template('index.html', resultado_lexema=None, resultado_sintactico=None, token_count=None, texto="")
 
 # Ejecución de la aplicación Flask
 if __name__ == '__main__':
