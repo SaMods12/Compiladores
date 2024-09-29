@@ -108,7 +108,7 @@ def p_error(p):
     if p:
         errores.append(f"Error de sintaxis en '{p.value}' (línea {p.lineno})")
     else:
-        errores.append("Error de sintaxis en la entrada")
+        errores.append("Error de sintaxis ' } ' en el cierre")
 
 # Función para el análisis sintáctico
 def prueba_sintactico(data):
@@ -116,7 +116,7 @@ def prueba_sintactico(data):
     resultado_sintactico.clear()  # Limpiar el resultado antes de cada prueba
     errores.clear()  # Limpiar la lista de errores
     parser = yacc.yacc()
-    parser.parse(data)
+    parser.parse(data, lexer = lex.lex())
     if errores:
         resultado_sintactico.extend(errores)
     else:
