@@ -1,9 +1,5 @@
-from flask import Flask, render_template, request
 import ply.lex as lex
 import ply.yacc as yacc
-
-# Configuración de la aplicación Flask
-app = Flask(__name__)
 
 # Variables globales para almacenar resultados
 resultado_lexema = []
@@ -116,36 +112,8 @@ def prueba_sintactico(data):
     resultado_sintactico.clear()  # Limpiar el resultado antes de cada prueba
     errores.clear()  # Limpiar la lista de errores
     parser = yacc.yacc()
-    parser.parse(data, lexer = lex.lex())
+    parser.parse(data, lexer=lex.lex())
     if errores:
         resultado_sintactico.extend(errores)
     else:
         resultado_sintactico.append("Análisis sintáctico correcto")
-
-# Ruta principal con el formulario
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    texto = ""
-    if request.method == 'POST':
-        # Obtener los datos del formulario
-        texto = request.form['texto']
-        prueba_lexico(texto)  # Ejecutar el análisis léxico
-        prueba_sintactico(texto)  # Ejecutar el análisis sintáctico
-        return render_template('index.html', resultado_lexema=resultado_lexema, 
-                               resultado_sintactico=resultado_sintactico, 
-                               token_count=token_count, texto=texto)
-    return render_template('index.html', resultado_lexema=None, resultado_sintactico=None, token_count=None, texto=texto)
-
-# Ruta para limpiar los resultados
-@app.route('/clear', methods=['POST'])
-def clear():
-    global resultado_lexema, resultado_sintactico, errores, token_count
-    resultado_lexema.clear()  # Limpiar el resultado léxico
-    resultado_sintactico.clear()  # Limpiar el resultado sintáctico
-    errores.clear()  # Limpiar la lista de errores
-    token_count.clear()  # Limpiar el contador de tokens
-    return render_template('index.html', resultado_lexema=None, resultado_sintactico=None, token_count=None, texto="")
-
-# Ejecución de la aplicación Flask
-if __name__ == '__main__':
-    app.run(debug=True)

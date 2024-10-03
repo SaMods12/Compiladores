@@ -23,7 +23,7 @@
                 <button type="submit" class="limpiar">Limpiar</button>
             </div>
         </form>
-        {% if results %}
+        {% if resultado_lexico %}
         <h2>Resultados:</h2>
         <div class="contenedor_tabla">
             <table>
@@ -35,7 +35,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for result in results %}
+                    {% for result in resultado_lexico %}
                     <tr>
                         <td>{{ result.token }}</td>
                         <td>{{ result.lexema }}</td>

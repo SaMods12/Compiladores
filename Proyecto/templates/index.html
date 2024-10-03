@@ -38,10 +38,9 @@
         </ul>
 
         
-
         <!-- Resultado Léxico en formato de tabla -->
         <h2>Resultado Léxico</h2>
-        {% if resultado_lexema %}
+        {% if resultado_lexico %}
         <div class="contenedor_tabla">
             <table>
                 <thead>
@@ -52,7 +51,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for lexema in resultado_lexema %}
+                    {% for lexema in resultado_lexico %}
                     <tr>
                         <td>{{ lexema.token }}</td>
                         <td>{{ lexema.lexema }}</td>
