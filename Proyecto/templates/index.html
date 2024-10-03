@@ -25,7 +25,7 @@
             </div>
         </form>
 
-<!-- Resultado Sintáctico -->
+        <!-- Resultado Sintáctico -->
         <h2>Resultado Sintáctico</h2>
         <ul>
             {% if resultado_sintactico %}
@@ -37,7 +37,6 @@
             {% endif %}
         </ul>
 
-        
         <!-- Resultado Léxico en formato de tabla -->
         <h2>Resultado Léxico</h2>
         {% if resultado_lexico %}
@@ -46,22 +45,30 @@
                 <thead>
                     <tr>
                         <th>Token</th>
-                        <th>Lexema</th>
+                        <th>Reservado</th>
+                        <th>Identificador</th>
+                        <th>Delimitador</th>
+                        <th>Símbolo</th>
+                        <th>Número</th>
                         <th>Línea</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for lexema in resultado_lexico %}
                     <tr>
-                        <td>{{ lexema.token }}</td>
                         <td>{{ lexema.lexema }}</td>
+                        <td>{% if lexema.token == 'Reservado' %}X{% endif %}</td>
+                        <td>{% if lexema.token == 'Identificador' %}X{% endif %}</td>
+                        <td>{% if lexema.token == 'Delimitador' %}X{% endif %}</td>
+                        <td>{% if lexema.token == 'Simbolo' %}X{% endif %}</td>
+                        <td>{% if lexema.token == 'Número' %}X{% endif %}</td>
                         <td>{{ lexema.linea }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        
+
         <!-- Conteo de Tokens -->
         <div class="contenedor_contadores">
             <h2>Conteo de Tokens</h2>
