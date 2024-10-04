@@ -33,7 +33,7 @@ reservada = {
 
 tokens = list(reservada.values()) + [
     'identificador', 'NUMERO', 'PUNTO', 'PARIZQ', 'PARDER', 'LLAVEIZQ', 'LLAVEDER',
-    'IGUAL', 'MAS', 'MAYORIGUAL', 'MENORIGUAL', 'MASMAS', 'COMA', 'PUNTOYCOMA', 'CADENA','END'
+    'IGUAL', 'MAS', 'MAYORIGUAL', 'MENORIGUAL', 'MASMAS', 'COMA', 'PUNTOYCOMA', 'CADENA'
 ]
 
 # Expresiones regulares para tokens simples
@@ -95,74 +95,45 @@ def prueba_lexico(data):
             token_count[tok.type] += 1
         else:
             token_count[tok.type] = 1
-                
-
-# # Reglas gramaticales para un bucle for
-# def p_instruccion_for(p):
-#     '''instruccion : FOR PARIZQ INT identificador IGUAL NUMERO PUNTOYCOMA identificador MENORIGUAL NUMERO PUNTOYCOMA identificador MASMAS PARDER bloque'''
-#     p[0] = ('for', ('declaracion', p[3], p[4], p[6]), ('condicion', p[8], p[9]), ('incremento', p[11]), p[14])
-
-# # Bloque de instrucciones dentro del bucle for
-# def p_bloque(p):
-#     '''bloque : LLAVEIZQ instruccion_llamada LLAVEDER'''
-#     p[0] = ('bloque', p[2])
-
-# # Llamada a System.out.println
-# def p_instruccion_llamada(p):
-#     '''instruccion_llamada : SYSTEM PUNTO OUT PUNTO PRINTLN PARIZQ CADENA MAS identificador PARDER PUNTOYCOMA'''
-#     p[0] = ('println', p[7], p[9])
-
 
 # Reglas gramaticales para el pseudocódigo
 def p_programa(p):
-    'programa : PROGRAMA identificador PARIZQ PARDER LLAVEIZQ declaraciones LLAVEDER'
+    '''programa : PROGRAMA def PARIZQ PARDER LLAVEIZQ code LLAVEDER'''
     p[0] = ('programa', p[2], p[5])
 
-def p_declaracion(p):
-    'declaraciones : INT lista_identificadores PUNTOYCOMA instrucciones'
-    p[0] = ('declaraciones', p[2], p[4])
+def p_def(p):
+    '''def : identificador'''
+    p[0] = p[1]  # Almacena el identificador
 
-def p_lista_identificadores(p):
-    '''lista_identificadores : identificador
-                             | identificador COMA lista_identificadores'''
-    if len(p) == 2:
-        p[0] = [p[1]]
-    else:
-        p[0] = [p[1]] + p[3]
+def p_code(p):
+    '''code : expr'''
+    p[0] = p[1]
 
-def p_instrucciones(p):
-    '''instrucciones : instruccion
-                     | instruccion instrucciones'''
-    if len(p) == 2:
-        p[0] = [p[1]]
-    else:
-        p[0] = [p[1]] + p[2]
-
-def p_instruccion(p):
-    '''instruccion : READ identificador PUNTOYCOMA
-                   | asignacion PUNTOYCOMA
-                   | PRINTF PARIZQ CADENA PARDER PUNTOYCOMA
-                   | bloque
-                   | END PUNTOYCOMA'''
-    p[0] = p[1:]
-
-def p_asignacion(p):
-    'asignacion : identificador IGUAL expresion'
-    p[0] = ('asignacion', p[1], p[3])
-
-def p_expresion(p):
-    '''expresion : identificador
-                 | NUMERO
-                 | expresion MAS expresion'''
+def p_expr(p):
+    '''expr : INT ids PUNTOYCOMA
+            | READ identificador PUNTOYCOMA 
+            | op
+            | PRINTF PARIZQ CADENA PARDER PUNTOYCOMA
+            | END PUNTOYCOMA
+            | expr expr'''
+    
+    # Manejo de la expresión
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = ('suma', p[1], p[3])
+        p[0] = ('composición', p[1], p[2])
 
-def p_bloque(p):
-    '''bloque : LLAVEIZQ instrucciones LLAVEDER
-              | LLAVEIZQ instrucciones END LLAVEDER'''  # Permitir bloques con END
-    p[0] = ('bloque', p[2])  # Guardar las instrucciones en el bloque
+def p_op(p):
+    '''op : identificador IGUAL identificador MAS identificador PUNTOYCOMA'''
+    p[0] = ('asignación', p[1], p[3], p[5])  # Almacena la operación
+
+def p_ids(p):
+    '''ids : identificador 
+           | ids COMA identificador'''
+    if len(p) == 2:
+        p[0] = [p[1]]
+    else:
+        p[0] = p[1] + [p[3]]
 
 # Error de sintaxis
 def p_error(p):
