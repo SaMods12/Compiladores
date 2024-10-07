@@ -7,6 +7,10 @@ resultado_sintactico = []
 errores = []
 token_count = {}
 
+# Listas para llevar control de variables declaradas y leídas
+variables_declaradas = set()
+variables_leidas = set()
+
 # Palabras reservadas
 reservada = {
     'for': 'FOR',
@@ -97,32 +101,45 @@ def prueba_lexico(data):
             token_count[tok.type] = 1
 
 # Reglas gramaticales para el pseudocódigo
+# Reglas gramaticales para el pseudocódigo
 def p_programa(p):
     '''programa : PROGRAMA def PARIZQ PARDER LLAVEIZQ code LLAVEDER'''
-    p[0] = ('programa', p[2], p[5])
 
+# Producción 'def' para identificadores
 def p_def(p):
     '''def : identificador'''
-    p[0] = p[1]  # Almacena el identificador
 
+# Producción 'code' que acepta una producción de 'expr'
 def p_code(p):
     '''code : expr'''
-    p[0] = p[1]
 
+# Producción 'expr' que acepta varias expresiones
 def p_expr(p):
     '''expr : INT ids PUNTOYCOMA
-            | READ identificador PUNTOYCOMA 
+            | READ identificador PUNTOYCOMA
             | op
-            | PRINTF PARIZQ CADENA PARDER PUNTOYCOMA
+            | PRINTF PARIZQ CADENA PARDER
             | END PUNTOYCOMA
             | expr expr'''
     
-    # Manejo de la expresión
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = ('composición', p[1], p[2])
-
+    # Si es una declaración de variables
+    if p[1] == 'int':
+        for var in p[2]:
+            variables_declaradas.add(var)  # Agregar a la lista de declaradas
+    
+     # Si es una lectura de variables
+    elif p[1] == 'read':
+        if p[2] not in variables_declaradas:
+            errores.append(f"Error: la variable '{p[2]}' fue leída sin ser declarada.")
+        else:
+            variables_leidas.add(p[2])  # Agregar a la lista de leídas
+    
+    # Si es una operación, verifica si las variables usadas están declaradas
+    elif isinstance(p[1], tuple) and p[1][0] == 'asignación':
+        for var in p[1][1:]:  # Verificar todas las variables de la operación
+            if var not in variables_declaradas:
+                errores.append(f"Error: la variable '{var}' fue utilizada sin ser declarada ")
+            
 def p_op(p):
     '''op : identificador IGUAL identificador MAS identificador PUNTOYCOMA'''
     p[0] = ('asignación', p[1], p[3], p[5])  # Almacena la operación
@@ -138,15 +155,17 @@ def p_ids(p):
 # Error de sintaxis
 def p_error(p):
     if p:
-        errores.append(f"Error de sintaxis en '{p.value}' (línea {p.lineno})")
+        errores.append(f"Error de sintaxis ' {p.value} ' en la linea {p.lineno}")
     else:
-        errores.append("Error de sintaxis: fin de entrada inesperado")
+        errores.append("Error de sintaxis: entrada incompleta o incorrecta")
 
 # Función para el análisis sintáctico
 def prueba_sintactico(data):
-    global resultado_sintactico, errores
+    global resultado_sintactico, errores, variables_declaradas, variables_leidas
     resultado_sintactico.clear()  # Limpiar el resultado antes de cada prueba
     errores.clear()  # Limpiar la lista de errores
+    variables_declaradas.clear()  # Limpiar variables declaradas
+    variables_leidas.clear()  # Limpiar variables leídas
     parser = yacc.yacc()
     parser.parse(data, lexer=lex.lex())
     if errores:
