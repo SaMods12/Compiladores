@@ -7,74 +7,60 @@ resultado_sintactico = []
 errores = []
 token_count = {}
 
+# Listas para llevar control de variables declaradas y leídas
+variables_declaradas = set()
+variables_leidas = set()
+
 # Palabras reservadas
 reservada = {
-    'for': 'FOR',
-    'while': 'WHILE',
-    'if': 'IF',
-    'else': 'ELSE',
-    'do': 'DO',
-    'float': 'FLOAT',
-    'public': 'PUBLIC',
-    'static': 'STATIC',
-    'void': 'VOID',
-    'class': 'CLASS',
-    'return': 'RETURN',
-    'new': 'NEW',
+    'include': 'INCLUDE',
+    'using': 'USING',
+    'namespace': 'NAMESPACE',
+    'std': 'STD',
     'int': 'INT',
-    'programa': 'PROGRAMA',
-    'read': 'READ',
-    'printf': 'PRINTF',
-    'end': 'END',
-    'System': 'SYSTEM', 
-    'out': 'OUT', 
-    'println': 'PRINTLN'
+    'main': 'MAIN',
+    'return': 'RETURN',
+    'cout': 'COUT'
 }
 
+# Lista completa de tokens
 tokens = list(reservada.values()) + [
-    'identificador', 'NUMERO', 'PUNTO', 'PARIZQ', 'PARDER', 'LLAVEIZQ', 'LLAVEDER',
-    'IGUAL', 'MAS', 'MAYORIGUAL', 'MENORIGUAL', 'MASMAS', 'COMA', 'PUNTOYCOMA', 'CADENA'
+    'MENORQUE', 'MAYORQUE', 'PARIZQ', 'PARDER', 'LLAVEIZQ', 'LLAVEDER', 
+    'PUNTOYCOMA', 'DOBLEMENORQUE', 'CADENA', 'NUMERO', 'IOSTREAM'  # Añadir IOSTREAM
 ]
 
 # Expresiones regulares para tokens simples
-t_PUNTO = r'\.'
+t_MENORQUE = r'<'
+t_MAYORQUE = r'>'
 t_PARIZQ = r'\('
 t_PARDER = r'\)'
 t_LLAVEIZQ = r'\{'
 t_LLAVEDER = r'\}'
-t_IGUAL = r'='
-t_MAS = r'\+'
-t_MAYORIGUAL = r'>='
-t_MENORIGUAL = r'<='
-t_MASMAS = r'\+\+'
-t_COMA = r','
 t_PUNTOYCOMA = r';'
+t_DOBLEMENORQUE = r'<<'
+
+# Definición de tokens para tipos específicos
 t_CADENA = r'\".*?\"'
+t_NUMERO = r'\d+'
+t_IOSTREAM = r'iostream'  # Definimos IOSTREAM
 
-# Definición de tokens para números y variables
-def t_NUMERO(t):
-    r'\d+'
-    t.value = int(t.value)
-    return t
-
-def t_identificador(t):
-    r'[a-zA-Z_][a-zA-Z_0-9]*'
-    t.type = reservada.get(t.value, 'identificador')  # Verifica si es una palabra reservada
-    return t
-
-# Manejo de nuevas líneas
-def t_newline(t):
-    r'\n+'
-    t.lexer.lineno += len(t.value)
-
-# Manejo de errores de tokens no válidos
-def t_error(t):
-    global resultado_lexema
-    resultado_lexema.append({"token": "ERROR", "lexema": t.value, "linea": t.lineno})
-    t.lexer.skip(1)
-
-# Ignorar espacios y tabulaciones
+# Ignorar espacios en blanco y tabulaciones
 t_ignore = ' \t'
+
+# Ignorar comentarios de una sola línea
+def t_COMENTARIO_LINEA(t):
+    r'//.*'
+    pass  # Ignorar el comentario
+
+# Ignorar comentarios de múltiples líneas
+def t_COMENTARIO_MULTILINEA(t):
+    r'/\*.*?\*/'
+    pass  # Ignorar el comentario
+
+# Manejo de errores en caracteres ilegales
+def t_error(t):
+    errores.append(f"Carácter ilegal '{t.value[0]}' en la línea {t.lineno}")
+    t.lexer.skip(1)  # Saltar el carácter ilegal
 
 # Función para analizar el texto ingresado (léxico)
 def prueba_lexico(data):
@@ -96,57 +82,55 @@ def prueba_lexico(data):
         else:
             token_count[tok.type] = 1
 
-# Reglas gramaticales para el pseudocódigo
+# Reglas gramaticales para instrucción imprimir en C++
+# Definir la producción principal del programa
 def p_programa(p):
-    '''programa : PROGRAMA def PARIZQ PARDER LLAVEIZQ code LLAVEDER'''
-    p[0] = ('programa', p[2], p[5])
+    '''programa : include_statement using_statement main_function'''
 
-def p_def(p):
-    '''def : identificador'''
-    p[0] = p[1]  # Almacena el identificador
+# Producción para la inclusión de librerías
+def p_include_statement(p):
+    '''include_statement : INCLUDE MENORQUE IOSTREAM MAYORQUE'''
 
-def p_code(p):
-    '''code : expr'''
-    p[0] = p[1]
+# Producción para la declaración del espacio de nombres (namespace)
+def p_using_statement(p):
+    '''using_statement : USING NAMESPACE STD PUNTOYCOMA'''
 
-def p_expr(p):
-    '''expr : INT ids PUNTOYCOMA
-            | READ identificador PUNTOYCOMA 
-            | op
-            | PRINTF PARIZQ CADENA PARDER PUNTOYCOMA
-            | END PUNTOYCOMA
-            | expr expr'''
-    
-    # Manejo de la expresión
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = ('composición', p[1], p[2])
+# Producción para la función `main`
+def p_main_function(p):
+    '''main_function : INT MAIN PARIZQ PARDER LLAVEIZQ statements LLAVEDER'''
 
-def p_op(p):
-    '''op : identificador IGUAL identificador MAS identificador PUNTOYCOMA'''
-    p[0] = ('asignación', p[1], p[3], p[5])  # Almacena la operación
+# Producción para las declaraciones dentro de `main`
+def p_statements(p):
+    '''statements : statement statements
+                  | statement'''
 
-def p_ids(p):
-    '''ids : identificador 
-           | ids COMA identificador'''
-    if len(p) == 2:
-        p[0] = [p[1]]
-    else:
-        p[0] = p[1] + [p[3]]
+# Producción para cada declaración dentro de `main`
+def p_statement(p):
+    '''statement : cout_statement
+                 | return_statement'''
 
-# Error de sintaxis
+# Producción para la instrucción `cout`
+def p_cout_statement(p):
+    '''cout_statement : COUT DOBLEMENORQUE CADENA PUNTOYCOMA'''
+
+# Producción para la instrucción `return`
+def p_return_statement(p):
+    '''return_statement : RETURN NUMERO PUNTOYCOMA'''
+
+# Manejo de errores de sintaxis
 def p_error(p):
     if p:
-        errores.append(f"Error de sintaxis en '{p.value}' (línea {p.lineno})")
+        errores.append(f"Error de sintaxis '{p.value}' en la línea {p.lineno}")
     else:
-        errores.append("Error de sintaxis: fin de entrada inesperado")
+        errores.append("Error de sintaxis: entrada incompleta o incorrecta")
 
 # Función para el análisis sintáctico
 def prueba_sintactico(data):
-    global resultado_sintactico, errores
+    global resultado_sintactico, errores, variables_declaradas, variables_leidas
     resultado_sintactico.clear()  # Limpiar el resultado antes de cada prueba
     errores.clear()  # Limpiar la lista de errores
+    variables_declaradas.clear()  # Limpiar variables declaradas
+    variables_leidas.clear()  # Limpiar variables leídas
     parser = yacc.yacc()
     parser.parse(data, lexer=lex.lex())
     if errores:
