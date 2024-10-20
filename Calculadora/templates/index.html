@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="input-section">
+            <div class="calculator">
+                <div class="screen">
+                    <div class="procedure"></div>
+                    <div class="result"></div>
+                </div>
+                <button class="button operator">(</button>
+                <button class="button operator">)</button>
+                <button class="button clear">C</button>
+                <button class="button clear">DER</button>
+                <button class="button">7</button>
+                <button class="button">8</button>
+                <button class="button">9</button>
+                <button class="button operator">/</button>
+                <button class="button">4</button>
+                <button class="button">5</button>
+                <button class="button">6</button>
+                <button class="button operator">*</button>
+                <button class="button">1</button>
+                <button class="button">2</button>
+                <button class="button">3</button>
+                <button class="button operator">-</button>
+                <button class="button">0</button>
+                <button class="button">.</button>
+                <button class="button operator">=</button>
+                <button class="button operator">+</button>
+            </div>
+        </div>
+        <div class="results-section">
+            <div class="lexico">
+                <h2>Resultado Léxico</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>TOKEN</th>
+                            <th>TIPO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lexico-body">
+                        <!-- Aquí se insertarán los resultados léxicos -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="nuevo">
+            <h2>Árbol De Derivación</h2>
+            <pre id="nuevo"></pre>
+        </div>
+    </div>
+
+    <script>
+        let expresion = '';
+
+        function numeroClick(event) {
+            if (event.target.innerText === 'C') {
+                limpiar();
+                return;
+            }
+            if (event.target.innerText === 'DER') {
+                expresion = expresion.slice(0, -1);
+                document.querySelector('.procedure').innerText = expresion;
+                return;
+            }
+            if (event.target.innerText === '(') {
+                expresion += '(';
+                document.querySelector('.procedure').innerText = expresion;
+                return;
+            }
+            if (event.target.innerText === ')') {
+                expresion += ')';
+                document.querySelector('.procedure').innerText = expresion;
+                return;
+            }
+            expresion += event.target.innerText;
+            document.querySelector('.procedure').innerText = expresion;
+        }
+
+        function operadorClick(event) {
+            expresion += ' ' + event.target.innerText + ' ';
+            document.querySelector('.procedure').innerText = expresion;
+        }
+
+        async function calcular() {
+            let resultado = 0;
+
+            const response = await fetch('/analizar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    expresion: expresion,
+                }),
+            });
+
+            const data = await response.json();
+
+            // Extraer los valores ingresados y sus tipos
+            let lexicoFormatted = data.resultado_lexico.map(item => {
+                let tipo = item[0] === "NUMBER" ? "Número" : "OPERADOR";
+                return `<tr>
+                            <td>${item[1]}</td>
+                            <td>${tipo}</td>
+                        </tr>`;
+            }).join("");
+
+            document.querySelector('#lexico-body').innerHTML = lexicoFormatted;
+
+            // Agregar el árbol de derivación al cuadro "Nuevo Cuadro"
+            document.querySelector('#nuevo').innerText = data.arbol;
+
+            try {
+                resultado = eval(expresion);
+                document.querySelector('.result').innerText = resultado;
+            } catch (error) {
+                document.querySelector('.result').innerText = "Error en la expresión";
+            }
+        }
+
+        function limpiar() {
+            expresion = '';
+            document.querySelector('.procedure').innerText = '';
+            document.querySelector('.result').innerText = '';
+            document.querySelector('#lexico-body').innerHTML = ''; // Limpiar la tabla léxica
+            document.querySelector('#nuevo').innerText = ''; // Limpiar el árbol
+        }
+
+        document.querySelectorAll('.button').forEach(function(button) {
+            if (button.innerText === 'C') {
+                button.addEventListener('click', limpiar);
+            } else if (button.classList.contains('operator')) {
+                if (button.innerText === '=') {
+                    button.addEventListener('click', calcular);
+                } else {
+                    button.addEventListener('click', operadorClick);
+                }
+            } else {
+                button.addEventListener('click', numeroClick);
+            }
+        });
+    </script>
+</body>
+</html>

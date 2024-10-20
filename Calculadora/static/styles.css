@@ -1,0 +1,164 @@
+/* Estilos del cuerpo de la página */
+body {
+    display: flex; /* Usa flexbox para organizar los elementos hijos */
+    justify-content: center; /* Centra los elementos hijos horizontalmente */
+    align-items: flex-start; /* Alinea los elementos hijos al inicio verticalmente */
+    min-height: 97vh; /* Altura mínima del 97% de la ventana del navegador */
+    font-family: 'Roboto', sans-serif; /* Define la fuente del texto */
+    background-color: #121212; /* Color de fondo oscuro */
+    margin: 0; /* Elimina márgenes por defecto */
+    padding: 20px; /* Relleno de 20 píxeles alrededor del contenido */
+    color: #ffffff; /* Color del texto blanco */
+    box-sizing: border-box; /* Incluye el relleno y el borde en el tamaño total */
+}
+
+/* Contenedor principal que agrupa secciones */
+.container {
+    width: 90%; /* Ancho del 90% del contenedor padre */
+    display: flex; /* Usa flexbox para organizar las secciones */
+    justify-content: space-between; /* Espacia uniformemente las secciones */
+    flex-wrap: wrap; /* Permite que las secciones se envuelvan en una nueva línea */
+    gap: 20px; /* Espacio de 20 píxeles entre las secciones */
+}
+
+/* Estilos comunes para las secciones de entrada, resultados y árbol */
+.input-section, .results-section, .nuevo {
+    display: flex; /* Organiza elementos hijos en una columna */
+    flex-direction: column; /* Coloca los hijos en una columna */
+    padding: 20px; /* Relleno de 20 píxeles */
+    box-sizing: border-box; /* Incluye relleno y borde en el tamaño total */
+    border-radius: 16px; /* Bordes redondeados */
+    margin-bottom: 20px; /* Margen inferior de 20 píxeles */
+    transition: transform 0.2s ease; /* Transición suave para efectos de hover */
+}
+
+/* Efecto hover para las secciones */
+.input-section:hover, .results-section:hover, .nuevo:hover {
+    transform: translateY(-5px); /* Mueve la sección ligeramente hacia arriba al pasar el mouse */
+}
+
+/* Estilo específico para la sección de entrada */
+.input-section {
+    width: 30%; /* Ancho del 30% del contenedor principal */
+    min-width: 300px; /* Ancho mínimo de 300 píxeles */
+}
+
+/* Estilo específico para la sección de resultados */
+.results-section {
+    width: 35%; /* Ancho del 35% del contenedor principal */
+    min-width: 300px; /* Ancho mínimo de 300 píxeles */
+}
+
+/* Estilo específico para la sección del árbol de derivación */
+.nuevo {
+    width: 30%; /* Ancho del 30% del contenedor principal */
+    min-width: 300px; /* Ancho mínimo de 300 píxeles */
+    height: 30%;
+}
+
+/* Estilos para la calculadora */
+.calculator {
+    width: 100%; /* Ancho del 100% de su contenedor */
+    max-width: 400px; /* Ancho máximo de 400 píxeles */
+    margin: 0 auto; /* Centra la calculadora horizontalmente */
+    background-color: #2c2c2c; /* Fondo gris oscuro */
+    padding: 15px; /* Relleno de 15 píxeles */
+    border: none; /* Sin borde */
+    border-radius: 16px; /* Bordes redondeados */
+    display: grid; /* Usa un diseño de cuadrícula */
+    grid-template-columns: repeat(4, 1fr); /* 4 columnas del mismo ancho */
+    grid-gap: 10px; /* Espacio de 10 píxeles entre botones */
+}
+
+/* Estilos para la pantalla de la calculadora */
+.screen {
+    background-color: #333; /* Fondo gris oscuro */
+    color: #ffffff; /* Color del texto blanco */
+    font-size: 24px; /* Tamaño de la fuente */
+    text-align: right; /* Alinea el texto a la derecha */
+    padding: 20px; /* Relleno de 20 píxeles */
+    border-radius: 16px; /* Bordes redondeados */
+    margin-bottom: 10px; /* Margen inferior de 10 píxeles */
+    display: flex; /* Usa flexbox para organizar contenido */
+    flex-direction: column; /* Organiza elementos en columna */
+    justify-content: space-between; /* Espacia elementos en la pantalla */
+    height: 120px; /* Altura fija de 120 píxeles */
+    grid-column: span 4; /* Ocupa las 4 columnas de la cuadrícula */
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5); /* Sombra interna */
+}
+
+/* Estilos para los botones de la calculadora */
+.button {
+    font-size: 24px; /* Tamaño de fuente para botones */
+    background-color: #232224; /* Color de fondo verde */
+    color: #fff; /* Color del texto blanco */
+    border: none; /* Sin borde */
+    border-radius: 16px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor a mano */
+    transition: background-color 0.3s ease; /* Transición suave para el color de fondo */
+    padding: 15px; /* Relleno de 15 píxeles */
+}
+
+/* Estilo para los botones de operador */
+.button.operator {
+    background-color: #6A3B9A; /* Color de fondo naranja */
+}
+
+/* Estilo para el botón de limpiar */
+.button.clear {
+    background-color: #F44336; /* Color de fondo rojo */
+}
+
+/* Efecto hover para los botones generales */
+.button:hover {
+    background-color: #3d3d3d; /* Color de fondo verde oscuro al pasar el mouse */
+}
+
+/* Efecto hover para los botones de operador */
+.button.operator:hover {
+    background-color: #fb8c00; /* Color de fondo naranja oscuro al pasar el mouse */
+}
+
+/* Efecto hover para el botón de limpiar */
+.button.clear:hover {
+    background-color: #ff0400; /* Color de fondo rojo oscuro al pasar el mouse */
+}
+
+/* Estilos para las secciones de resultados */
+.lexico, .nuevo {
+    background-color: #2c2c2c; /* Fondo gris claro */
+    padding: 20px; /* Relleno de 20 píxeles */
+    border-radius: 16px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra para efecto de elevación */
+    margin-bottom: 20px; /* Margen inferior de 20 píxeles */
+}
+
+/* Estilos para los títulos */
+h2 {
+    font-size: 20px; /* Tamaño de fuente para los títulos */
+    color: #ffffff; /* Color del texto blanco */
+    margin-bottom: 10px; /* Margen inferior de 10 píxeles */
+}
+
+/* Estilos para bloques de código y preformateados */
+pre {
+    background-color: #333; /* Fondo gris oscuro */
+    padding: 10px; /* Relleno de 10 píxeles */
+    border-radius: 8px; /* Bordes redondeados */
+    overflow-x: auto; /* Desplazamiento horizontal si el contenido desborda */
+    color: #ffffff; /* Color del texto blanco */
+}
+
+/* Estilos para tablas */
+table {
+    width: 100%; /* Ancho de la tabla al 100% del contenedor */
+    border-collapse: collapse; /* Colapsa bordes de celdas */
+    margin-top: 10px; /* Margen superior de 10 píxeles */
+}
+
+/* Estilos para las celdas de la tabla */
+th, td {
+    border: 1px solid #ffffff; /* Borde blanco para celdas */
+    padding: 8px; /* Relleno de 8 píxeles */
+    text-align: left; /* Alineación de texto a la izquierda */
+}
