@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador De CURP</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Generador De CURP</h2>
+        <form action="/validate" method="post" target="_blank" onsubmit="openResultWindow(event)">
+            <div class="label-container">
+                <div class="label-item">
+                    <label for="nombre">Nombre(s)*:</label>
+                    <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre(s)" required>
+                </div>
+                <div class="label-item">
+                    <label for="primer_apellido">Primer apellido*:</label>
+                    <input type="text" id="primer_apellido" name="primer_apellido" placeholder="Ingresa tu primer apellido" required>
+                </div>
+                <div class="label-item">
+                    <label for="segundo_apellido">Segundo apellido:</label>
+                    <input type="text" id="segundo_apellido" name="segundo_apellido" placeholder="Ingresa tu segundo apellido">
+                </div>
+                <div class="label-item">
+                    <label for="dia_nacimiento">Día de nacimiento*:</label>
+                    <select id="dia_nacimiento" name="dia_nacimiento" required>
+                        <option value="">Seleccionar el día</option>
+                        {% for day in range(1, 32) %}
+                            <option value="{{ day }}">{{ day }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="label-item">
+                    <label for="mes_nacimiento">Mes de nacimiento*:</label>
+                    <select id="mes_nacimiento" name="mes_nacimiento" required>
+                        <option value="">Seleccionar el mes</option>
+                        <option value="01">Enero</option>
+                        <option value="02">Febrero</option>
+                        <option value="03">Marzo</option>
+                        <option value="04">Abril</option>
+                        <option value="05">Mayo</option>
+                        <option value="06">Junio</option>
+                        <option value="07">Julio</option>
+                        <option value="08">Agosto</option>
+                        <option value="09">Septiembre</option>
+                        <option value="10">Octubre</option>
+                        <option value="11">Noviembre</option>
+                        <option value="12">Diciembre</option>
+                    </select>
+                </div>
+                <div class="label-item">
+                    <label for="anio_nacimiento">Año de nacimiento*:</label>
+                    <input type="text" id="anio_nacimiento" name="anio_nacimiento" placeholder="Ingresa el año Ej. 1943" required>
+                </div>
+                <div class="label-item">
+                    <label for="sexo">Sexo*:</label>
+                    <select id="sexo" name="sexo" required>
+                        <option value="">Selecciona el sexo</option>
+                        <option value="H">Hombre</option>
+                        <option value="M">Mujer</option>
+                    </select>
+                </div>
+                <div class="label-item">
+                    <label for="estado">Estado*:</label>
+                    <select id="estado" name="estado" required>
+                        <option value="">Selecciona el estado</option>
+                        <option value="CS">CHIAPAS</option>
+                        <!-- Agrega más estados según sea necesario -->
+                    </select>
+                </div>
+            </div>
+            <button type="submit">Generar CURP</button>
+        </form>
+    </div>
+
+    <script>
+        function openResultWindow(event) {
+            event.preventDefault();
+            const form = event.target;
+            const data = new FormData(form);
+
+            const nombre = data.get('nombre');
+            const primerApellido = data.get('primer_apellido');
+            const segundoApellido = data.get('segundo_apellido');
+            const dia = data.get('dia_nacimiento');
+            const mes = data.get('mes_nacimiento');
+            const anio = data.get('anio_nacimiento');
+            const sexo = data.get('sexo');
+            const estado = data.get('estado');
+
+            const curp = `${primerApellido.charAt(0)}${primerApellido.charAt(1)}${segundoApellido.charAt(0)}${nombre.charAt(0)}${anio.slice(-2)}${mes}${dia}${sexo}${estado}`;
+
+            const newWindow = window.open();
+            newWindow.document.write(`
+                <!DOCTYPE html>
+                <html lang="es">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Resultado De CURP</title>
+                    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+                </head>
+                <body>
+                    <div class="resultado-container">
+                        <h3>Resultado De CURP</h3>
+                        <table>
+                            <tr>
+                                <th>Nombre</th>
+                                <td>${nombre}</td>
+                            </tr>
+                            <tr>
+                                <th>Primer Apellido</th>
+                                <td>${primerApellido}</td>
+                            </tr>
+                            <tr>
+                                <th>Segundo Apellido</th>
+                                <td>${segundoApellido || 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <th>Fecha de Nacimiento</th>
+                                <td>${dia}/${mes}/${anio}</td>
+                            </tr>
+                            <tr>
+                                <th>Sexo</th>
+                                <td>${sexo === 'H' ? 'Hombre' : 'Mujer'}</td>
+                            </tr>
+                            <tr>
+                                <th>Estado</th>
+                                <td>${estado}</td>
+                            </tr>
+                            <tr>
+                                <th>CURP</th>
+                                <td>${curp}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </body>
+                </html>
+            `);
+            newWindow.document.close();
+        }
+    </script>
+</body>
+</html>
