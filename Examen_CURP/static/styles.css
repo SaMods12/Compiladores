@@ -1,99 +1,116 @@
+/* Estilos generales */
 body {
     font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
     margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
 }
 
 .container {
-    width: 85%;
-    max-width: 700px;
-    margin: 40px auto;
-    padding: 30px;
     background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    padding: 40px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
 h2 {
-    text-align: center;
-    color: #333;
-    font-weight: 700;
-    letter-spacing: 1px;
+    margin-bottom: 15px;
+    font-size: 24px;
+    color: #4A3B6E; /* tono más oscuro y sutil del morado */
+    font-weight: bold;
 }
 
-.label-container {
-    margin-bottom: 25px;
-    padding: 10px;
-    border-left: 4px solid #6A3B9A;
+/* Estilos del formulario */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    width: 100%;
 }
 
 .label-item {
-    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
 }
 
-label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: 600;
+.label-item label {
+    font-weight: 500;
     font-size: 14px;
+    margin-bottom: 5px;
+    color: #4A3B6E;
 }
 
-input, select {
-    width: 100%;
-    padding: 12px;
+.label-item input[type="text"],
+.label-item select {
+    padding: 10px;
+    font-size: 14px;
     border: 1px solid #ccc;
     border-radius: 6px;
-    box-sizing: border-box;
-    outline: none;
-    transition: border-color 0.3s;
+    background-color: #fdfdfd;
+    color: #333;
+    transition: border-color 0.3s ease;
 }
 
-input:focus, select:focus {
+.label-item input[type="text"]:focus,
+.label-item select:focus {
     border-color: #6A3B9A;
+    outline: none;
 }
 
-button {
-    width: 100%;
-    padding: 12px;
-    background-color: #7547a3;
-    color: white;
+/* Botón de envío */
+button[type="submit"] {
+    margin-top: 25px;
+    padding: 12px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #6A3B9A;
     border: none;
     border-radius: 6px;
+    width: 100%;
     cursor: pointer;
-    font-size: 16px;
     transition: background-color 0.3s ease;
 }
 
-button:hover {
-    background-color: #6A3B9A;
+button[type="submit"]:hover {
+    background-color: #56307E;
 }
 
-.resultado {
-    display: none;
-    margin-top: 25px;
-    padding: 15px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    background-color: #e9ecef;
-    font-size: 14px;
-    line-height: 1.5;
+/* Estilos del resultado */
+.resultado-container {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    color: #6A3B9A;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
 }
 
+/* Tabla de resultados */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 25px;
+    margin-top: 20px;
     border-radius: 8px;
     overflow: hidden;
-    margin: 0 auto;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-th, td {
-    padding: 14px;
-    text-align: left;
-    border: 1px solid #ccc;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 th {
@@ -101,52 +118,32 @@ th {
     color: white;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    padding: 15px;
+    font-size: 16px;
+    text-align: center;
 }
 
-tr:nth-child(even) {
+td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    background-color: #f4f3fc;
+    color: #333;
+}
+
+tr:nth-child(even) td {
     background-color: #f9f9f9;
 }
 
-tr:hover {
+tr:hover td {
     background-color: #f1f1f1;
 }
 
-.btn-imprimir {
-    display: inline-block;
-    margin: 20px auto;
-    padding: 12px 24px;
-    background-color: #7547a3;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    text-decoration: none;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
-
-.btn-imprimir:hover {
-    background-color: #6A3B9A;
-}
-
-.resultado-container {
-    background-color: #ffffff;
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+/* Estilo para el título "Resultado de CURP" */
+table caption {
+    font-size: 18px;
+    font-weight: bold;
+    color: #4A3B6E;
+    margin-bottom: 15px;
     text-align: center;
-    width: 80%;
-    max-width: 600px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000;
-}
-
-.resultado-container h3 {
-    color: #6A3B9A;
-    margin-bottom: 20px;
-    font-weight: 600;
 }
