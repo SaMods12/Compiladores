@@ -90,7 +90,12 @@
             const sexo = data.get('sexo');
             const estado = data.get('estado');
 
-            const curp = `${primerApellido.charAt(0)}${primerApellido.charAt(1)}${segundoApellido.charAt(0)}${nombre.charAt(0)}${anio.slice(-2)}${mes}${dia}${sexo}${estado}XX`; // "XX" represents the homoclave.
+            // Obtener las consonantes
+            const consonantePrimerApellido = primerApellido.match(/[^AEIOU]/g);
+            const consonanteSegundoApellido = segundoApellido.match(/[^AEIOU]/g);
+            const consonanteNombre = nombre.match(/[^AEIOU]/g);
+
+            const curp = `${primerApellido.charAt(0)}${primerApellido.charAt(1)}${segundoApellido.charAt(0)}${nombre.charAt(0)}${anio.slice(-2)}${mes}${dia}${sexo}${estado}${consonantePrimerApellido ? consonantePrimerApellido[1] : 'X'}${consonanteSegundoApellido ? consonanteSegundoApellido[1] : 'X'}${consonanteNombre ? consonanteNombre[1] : 'X'}05`;
 
             const newWindow = window.open();
             newWindow.document.write(`
